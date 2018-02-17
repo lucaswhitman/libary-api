@@ -1,4 +1,4 @@
-package models
+package main
 
 import (
 	"testing"
@@ -10,7 +10,7 @@ func TestValidUpdate(t *testing.T) {
 	a := Author{
 		FirstName: "Roger",
 		LastName:  "Zelazny",
-		Id:        1,
+		ID:        1,
 	}
 	if err := ValidateAuthor(a, false); err != nil {
 		t.Errorf("Unexpected error: %s", err.Error())
@@ -27,12 +27,12 @@ func TestValidCreate(t *testing.T) {
 	}
 }
 
-func TestIdNotSetOnUpdateError(t *testing.T) {
+func TestIDNotSetOnUpdateError(t *testing.T) {
 	a := Author{
 		FirstName: "Roger",
 		LastName:  "Zelazny",
 	}
-	expectedMessage := "Id must be greater than 0"
+	expectedMessage := "ID must be greater than 0"
 	if err := ValidateAuthor(a, false); err != nil {
 		assert.Equal(t, expectedMessage, err.Error(), "Unexpected error message.")
 	} else {
@@ -40,13 +40,13 @@ func TestIdNotSetOnUpdateError(t *testing.T) {
 	}
 }
 
-func TestNoIdOnCreateError(t *testing.T) {
+func TestNoIDOnCreateError(t *testing.T) {
 	a := Author{
 		FirstName: "Roger",
 		LastName:  "Zelazny",
-		Id:        1,
+		ID:        1,
 	}
-	expectedMessage := "Id cannot be set on new author"
+	expectedMessage := "ID cannot be set on new author"
 	if err := ValidateAuthor(a, true); err != nil {
 		assert.Equal(t, expectedMessage, err.Error(), "Unexpected error message.")
 	} else {

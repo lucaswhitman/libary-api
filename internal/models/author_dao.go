@@ -1,4 +1,4 @@
-package models
+package main
 
 import (
 	"database/sql"
@@ -6,19 +6,19 @@ import (
 
 func (a *Author) getAuthor(db *sql.DB) error {
 	return db.QueryRow("SELECT first_name, last_name FROM authors WHERE id=$1",
-		a.Id).Scan(&a.FirstName, &a.LastName)
+		a.ID).Scan(&a.FirstName, &a.LastName)
 }
 
 func (a *Author) updateAuthor(db *sql.DB) error {
 	_, err :=
 		db.Exec("UPDATE authors SET first_name=$1, last_name=$2 WHERE id=$3",
-			a.FirstName, a.LastName, a.Id)
+			a.FirstName, a.LastName, a.ID)
 
 	return err
 }
 
 func (a *Author) deleteAuthor(db *sql.DB) error {
-	_, err := db.Exec("DELETE FROM authors WHERE id=$1", a.Id)
+	_, err := db.Exec("DELETE FROM authors WHERE id=$1", a.ID)
 
 	return err
 }
@@ -26,7 +26,7 @@ func (a *Author) deleteAuthor(db *sql.DB) error {
 func (a *Author) createAuthor(db *sql.DB) error {
 	err := db.QueryRow(
 		"INSERT INTO authors(first_name, last_name) VALUES($1, $2) RETURNING id",
-		a.FirstName, a.LastName).Scan(&a.Id)
+		a.FirstName, a.LastName).Scan(&a.ID)
 
 	if err != nil {
 		return err
@@ -50,7 +50,7 @@ func getAuthors(db *sql.DB, start, count int) ([]Author, error) {
 
 	for rows.Next() {
 		var a Author
-		if err := rows.Scan(&a.Id, &a.FirstName, &a.LastName); err != nil {
+		if err := rows.Scan(&a.ID, &a.FirstName, &a.LastName); err != nil {
 			return nil, err
 		}
 		Authors = append(Authors, a)

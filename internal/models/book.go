@@ -1,4 +1,4 @@
-package models
+package main
 
 import (
 	"errors"
@@ -15,9 +15,9 @@ const (
 )
 
 type Book struct {
-	Id          int
+	ID          int
 	Title       string
-	AuthorId    int
+	AuthorID    int
 	Publisher   string
 	PublishDate time.Time
 	Rating      int
@@ -25,16 +25,16 @@ type Book struct {
 }
 
 func ValidateBook(b Book, isNew bool) error {
-	if b.Id <= 0 && isNew == false {
-		return errors.New("Id must be greater than 0")
+	if b.ID <= 0 && isNew == false {
+		return errors.New("ID must be greater than 0")
 	}
-	if b.Id != 0 && isNew == true {
-		return errors.New("Id cannot be set on new book")
+	if b.ID != 0 && isNew == true {
+		return errors.New("ID cannot be set on new book")
 	}
 	if b.Title == "" {
 		return errors.New("Title cannot be empty")
 	}
-	if b.AuthorId <= 0 {
+	if b.AuthorID <= 0 {
 		return errors.New("AuthorID must be greater than 0")
 	}
 	if b.Publisher == "" {

@@ -1,4 +1,4 @@
-package models
+package main
 
 import (
 	"testing"
@@ -12,9 +12,9 @@ const TEST_DATE_STRING = "2014-11-12T11:45:26.371Z"
 func TestBookValidUpdate(t *testing.T) {
 	d, _ := time.Parse(PUBLISH_DATE_FORMAT, TEST_DATE_STRING)
 	b := Book{
-		Id:          1,
+		ID:          1,
 		Title:       "The Great Book Of Amber",
-		AuthorId:    1,
+		AuthorID:    1,
 		Publisher:   "Harper Voyager",
 		PublishDate: d,
 		Rating:      1,
@@ -29,7 +29,7 @@ func TestBookValidCreate(t *testing.T) {
 	d, _ := time.Parse(PUBLISH_DATE_FORMAT, TEST_DATE_STRING)
 	b := Book{
 		Title:       "The Great Book Of Amber",
-		AuthorId:    1,
+		AuthorID:    1,
 		Publisher:   "Harper Voyager",
 		PublishDate: d,
 		Rating:      1,
@@ -40,18 +40,18 @@ func TestBookValidCreate(t *testing.T) {
 	}
 }
 
-func TestBookIdNotSetOnCreate(t *testing.T) {
+func TestBookIDNotSetOnCreate(t *testing.T) {
 	d, _ := time.Parse(PUBLISH_DATE_FORMAT, TEST_DATE_STRING)
 	b := Book{
-		Id:          1,
+		ID:          1,
 		Title:       "The Great Book Of Amber",
-		AuthorId:    1,
+		AuthorID:    1,
 		Publisher:   "Harper Voyager",
 		PublishDate: d,
 		Rating:      1,
 		Status:      CheckedIn,
 	}
-	expectedMessage := "Id cannot be set on new book"
+	expectedMessage := "ID cannot be set on new book"
 	if err := ValidateBook(b, true); err != nil {
 		assert.Equal(t, expectedMessage, err.Error(), "Unexpected error message.")
 	} else {
@@ -59,17 +59,17 @@ func TestBookIdNotSetOnCreate(t *testing.T) {
 	}
 }
 
-func TestBookIdSetOnUpdate(t *testing.T) {
+func TestBookIDSetOnUpdate(t *testing.T) {
 	d, _ := time.Parse(PUBLISH_DATE_FORMAT, TEST_DATE_STRING)
 	b := Book{
 		Title:       "The Great Book Of Amber",
-		AuthorId:    1,
+		AuthorID:    1,
 		Publisher:   "Harper Voyager",
 		PublishDate: d,
 		Rating:      1,
 		Status:      CheckedIn,
 	}
-	expectedMessage := "Id must be greater than 0"
+	expectedMessage := "ID must be greater than 0"
 	if err := ValidateBook(b, false); err != nil {
 		assert.Equal(t, expectedMessage, err.Error(), "Unexpected error message.")
 	} else {
@@ -81,7 +81,7 @@ func TestBookTitleNotEmpty(t *testing.T) {
 	d, _ := time.Parse(PUBLISH_DATE_FORMAT, TEST_DATE_STRING)
 	b := Book{
 		Title:       "",
-		AuthorId:    1,
+		AuthorID:    1,
 		Publisher:   "Harper Voyager",
 		PublishDate: d,
 		Rating:      1,
@@ -95,11 +95,11 @@ func TestBookTitleNotEmpty(t *testing.T) {
 	}
 }
 
-func TestBookAuthorIdNotZero(t *testing.T) {
+func TestBookAuthorIDNotZero(t *testing.T) {
 	d, _ := time.Parse(PUBLISH_DATE_FORMAT, TEST_DATE_STRING)
 	b := Book{
 		Title:       "The Great Book Of Amber",
-		AuthorId:    0,
+		AuthorID:    0,
 		Publisher:   "Harper Voyager",
 		PublishDate: d,
 		Rating:      1,
@@ -117,7 +117,7 @@ func TestBookPublisherNotEmpty(t *testing.T) {
 	d, _ := time.Parse(PUBLISH_DATE_FORMAT, TEST_DATE_STRING)
 	b := Book{
 		Title:       "The Great Book Of Amber",
-		AuthorId:    1,
+		AuthorID:    1,
 		Publisher:   "",
 		PublishDate: d,
 		Rating:      1,
@@ -138,7 +138,7 @@ func TestBookNotPublishedYet(t *testing.T) {
 
 	b := Book{
 		Title:       "The Great Book Of Amber",
-		AuthorId:    1,
+		AuthorID:    1,
 		Publisher:   "Harper Voyager",
 		PublishDate: futureDate,
 		Rating:      1,
@@ -156,7 +156,7 @@ func TestBookRatingTooLow(t *testing.T) {
 	d, _ := time.Parse(PUBLISH_DATE_FORMAT, TEST_DATE_STRING)
 	b := Book{
 		Title:       "The Great Book Of Amber",
-		AuthorId:    1,
+		AuthorID:    1,
 		Publisher:   "Harper Voyager",
 		PublishDate: d,
 		Rating:      0,
@@ -174,7 +174,7 @@ func TestBookRatingTooHigh(t *testing.T) {
 	d, _ := time.Parse(PUBLISH_DATE_FORMAT, TEST_DATE_STRING)
 	b := Book{
 		Title:       "The Great Book Of Amber",
-		AuthorId:    1,
+		AuthorID:    1,
 		Publisher:   "Harper Voyager",
 		PublishDate: d,
 		Rating:      110,
@@ -192,7 +192,7 @@ func TestBookStatusEmpty(t *testing.T) {
 	d, _ := time.Parse(PUBLISH_DATE_FORMAT, TEST_DATE_STRING)
 	b := Book{
 		Title:       "The Great Book Of Amber",
-		AuthorId:    1,
+		AuthorID:    1,
 		Publisher:   "Harper Voyager",
 		PublishDate: d,
 		Rating:      1,
@@ -210,7 +210,7 @@ func TestBookStatusStringConversion(t *testing.T) {
 	d, _ := time.Parse(PUBLISH_DATE_FORMAT, TEST_DATE_STRING)
 	b := Book{
 		Title:       "The Great Book Of Amber",
-		AuthorId:    1,
+		AuthorID:    1,
 		Publisher:   "Harper Voyager",
 		PublishDate: d,
 		Rating:      1,
