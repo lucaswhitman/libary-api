@@ -23,7 +23,7 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	a.Initialize(conf.Host, conf.Port, conf.Username, conf.Password, conf.DatabaseName)
+	a.Initialize(conf.Database.Host, conf.Database.Port, conf.Database.Username, conf.Database.Password, conf.Database.DatabaseName)
 	ensureTablesExists()
 	code := m.Run()
 

@@ -34,8 +34,8 @@ func (a *App) Initialize(host string, port int, user string, password string, db
 
 }
 
-func (a *App) Run(addr string) {
-	log.Fatal(http.ListenAndServe(":8000", a.Router))
+func (a *App) Run(port int) {
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), a.Router))
 }
 
 func (a *App) initializeRoutes() {

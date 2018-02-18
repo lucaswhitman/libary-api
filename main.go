@@ -9,11 +9,16 @@ import (
 )
 
 type Configuration struct {
-	Host         string `json:"host"`
-	Port         int    `json:"port"`
-	Username     string `json:"username"`
-	Password     string `json:"password"`
-	DatabaseName string `json:"databaseName"`
+	Application struct {
+		Port int `json:"port"`
+	} `json:"application"`
+	Database struct {
+		Host         string `json:"host"`
+		Port         int    `json:"port"`
+		Username     string `json:"username"`
+		Password     string `json:"password"`
+		DatabaseName string `json:"databaseName"`
+	} `json:"database"`
 }
 
 func main() {
@@ -24,9 +29,9 @@ func main() {
 		log.Fatal(err)
 	}
 
-	a.Initialize(conf.Host, conf.Port, conf.Username, conf.Password, conf.DatabaseName)
+	a.Initialize(conf.Database.Host, conf.Database.Port, conf.Database.Username, conf.Database.Password, conf.Database.DatabaseName)
 
-	a.Run(":8080")
+	a.Run(conf.Application.Port)
 }
 
 func getConf(fileName string) (Configuration, error) {

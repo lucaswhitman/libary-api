@@ -1,7 +1,12 @@
 {
-  "host": "127.0.0.1",
-  "port": 5432,
-  "username": "library_test",
-  "password": "password",
-  "databaseName": "library_test"
+  "application": {
+    "port": 8000
+  },
+  "database": {
+    "host": "127.0.0.1",
+    "port": 5432,
+    "username": "library_test",
+    "password": "password",
+    "databaseName": "library_test"
+  }
 }

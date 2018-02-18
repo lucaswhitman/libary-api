@@ -9,11 +9,16 @@ In order to run this application locally you'll need to have a PostgreSQL instan
 Some base configuration is configured, this can be changed if your local environment requires it
 ```javascript
 {
-  "host": "127.0.0.1",
-  "port": 5432,
-  "username": "library_test",
-  "password": "password",
-  "databaseName": "library_test"
+  "application": {
+    "port": 8000
+  },
+  "database": {
+    "host": "127.0.0.1",
+    "port": 5432,
+    "username": "library_test",
+    "password": "password",
+    "databaseName": "library_test"
+  }
 }
 ```
 There is both a `config.json` for the main app and a `config_test.json` for running tests to keep the data separate. *The tests will clear all data from the tables so don't use the same database!*
@@ -37,5 +42,7 @@ go build
 ```
 
 ### Running Tests
-To run tests go test ./...
-
+To run tests:
+```bash
+ go test ./...
+```
