@@ -57,6 +57,7 @@ make local
 This app can be tested manually via PostMan or cURL, here are some information to get you started:
 
 ### The Book Model
+All fields are required, new books should not have an id set.
 ```javascript
 {
   "id": 1,
