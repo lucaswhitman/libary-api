@@ -142,7 +142,7 @@ func addBooks(count int) {
 			"That One Guy",
 			"Test Publisher",
 			"2014-11-12T11:45:26.371Z",
-			3,
+			1,
 			"CheckedIn")
 	}
 }
@@ -181,8 +181,24 @@ func TestUpdateBook(t *testing.T) {
 		t.Errorf("Expected the title to change from '%v' to '%v'. Got '%v'", originalBook["title"], m["title"], m["title"])
 	}
 
+	if m["author"] == originalBook["author"] {
+		t.Errorf("Expected the author to change from '%v' to '%v'. Got '%v'", originalBook["author"], m["author"], m["author"])
+	}
+
 	if m["publisher"] == originalBook["publisher"] {
 		t.Errorf("Expected the publisher to change from '%v' to '%v'. Got '%v'", originalBook["publisher"], m["publisher"], m["publisher"])
+	}
+
+	if m["publishDate"] == originalBook["publishDate"] {
+		t.Errorf("Expected the publishDate to change from '%v' to '%v'. Got '%v'", originalBook["publishDate"], m["publishDate"], m["publishDate"])
+	}
+
+	if m["rating"] == originalBook["rating"] {
+		t.Errorf("Expected the rating to change from '%v' to '%v'. Got '%v'", originalBook["rating"], m["rating"], m["rating"])
+	}
+
+	if m["status"] == originalBook["status"] {
+		t.Errorf("Expected the status to change from '%v' to '%v'. Got '%v'", originalBook["status"], m["status"], m["status"])
 	}
 }
 
