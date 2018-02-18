@@ -64,8 +64,7 @@ This app can be tested manually via PostMan or cURL, here are some information t
 ```
 
 ### Create a New Note
-POST /books
-BODY a book
+`POST /books`
 #### Example
 ```bash
 curl -i -H "Content-Type: application/json" -X POST -d '{
@@ -93,7 +92,7 @@ A saved book...
 
 ### Get an existing book
 You can get a book using an API call:
-GET /books/{id}
+`GET /books/{id}`
 #### Example:
 ```bash
 curl -i -H "Content-Type: application/json" -X GET http://localhost:8000/books/1
@@ -114,7 +113,7 @@ The requested book
 
 ### Get all books
 I can get all books using an API call:
-GET /books
+`GET /books`
 #### Example:
 ```bash
 curl -i -H "Content-Type: application/json" -X GET http://localhost:8000/books
@@ -143,7 +142,7 @@ A list of books
 
 ### Delete an existing book
 You can delete a book using an API call:
-DELETE /books/{id}
+`DELETE /books/{id}`
 #### Example:
 ```bash
 curl -i -H "Content-Type: application/json" -X DELETE http://localhost:8000/books/1
