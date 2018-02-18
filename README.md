@@ -38,13 +38,19 @@ In the future this should probably be moved into a database migration tool...
 ### Building
 It was developed on a Mac, but Go should be able to compile the proper binaries using the following command:
 ```bash
-go build
+make build
 ```
 
 ### Running Tests
 To run tests:
 ```bash
-go test ./...
+make test
+```
+
+### Using Docker locally
+Requires that Docker is installed on the local machine
+```bash
+make local
 ```
 
 ## Sample usage

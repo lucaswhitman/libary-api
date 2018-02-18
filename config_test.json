@@ -6,7 +6,7 @@
     "host": "127.0.0.1",
     "port": 5432,
     "username": "library_test",
-    "password": "password",
+    "password": "s3cr3tp4ssw0rd",
     "databaseName": "library_test"
   }
 }

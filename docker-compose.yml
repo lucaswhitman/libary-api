@@ -1,0 +1,19 @@
+version: '3'
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DB: library
+      POSTGRES_USER: library
+      POSTGRES_PASSWORD: s3cr3tp4ssw0rd
+  app:
+    build: .
+    command: ["/bin/wait-for-it.sh", "db:5432", "--", "go", "run", "main.go"]
+    volumes:
+      - .:/go/src/github.com/lucaswhitman/library-api/
+    ports:
+      - "8000:8000"
+    links:
+      - db
+    expose:
+      - "8000"
