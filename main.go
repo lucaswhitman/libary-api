@@ -19,20 +19,20 @@ type Configuration struct {
 func main() {
 	a := app.App{}
 
-	conf := getConf("./config.json")
+	conf, err := getConf("./config.json")
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	a.Initialize(conf.Host, conf.Port, conf.Username, conf.Password, conf.DatabaseName)
 
 	a.Run(":8080")
 }
 
-func getConf(fileName string) Configuration {
+func getConf(fileName string) (Configuration, error) {
 	file, _ := os.Open(fileName)
 	decoder := json.NewDecoder(file)
 	conf := Configuration{}
 	err := decoder.Decode(&conf)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return conf
+	return conf, err
 }

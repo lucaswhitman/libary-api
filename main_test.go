@@ -19,7 +19,10 @@ var a app.App
 func TestMain(m *testing.M) {
 	a = app.App{}
 
-	conf := getConf("./config_test.json")
+	conf, err := getConf("./config_test.json")
+	if err != nil {
+		log.Fatal(err)
+	}
 	a.Initialize(conf.Host, conf.Port, conf.Username, conf.Password, conf.DatabaseName)
 	ensureTablesExists()
 	code := m.Run()

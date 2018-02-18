@@ -6,10 +6,9 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/lucaswhitman/library-api/services"
-
 	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
+	"github.com/lucaswhitman/library-api/services"
 )
 
 type App struct {
