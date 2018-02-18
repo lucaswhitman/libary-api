@@ -191,6 +191,10 @@ The status of the request
 }
 ```
 
-
-
-
+## Future design thoughts
+* Increased metadata - Things like author, review, and publisher should be first class citzens in the data model. This would allow for advanced querying such as getting all high rated books by your favorite author.
+* Authentication - Certain APIs should be restricted to logged in users. This would allow for restricting the ability to delete books, and linking comments to users.
+* Increased testing - All the major endpoints are covered, but if we were taking this to production I'd want to add additional unit/integration tests. I'd also likely want to add some additonal automated testing via an external test service.
+* UI - If we want to expose this service to end users we'd likely need a UI.
+* Free text search and facets - PostgreSQL has the ability to allow for free text search, we should leverage it in the API to allow the user to search for terms in the title or author. We could also expose metadata as facets to allow the user to interactively browse through the data.
+* More robust deployments - The process for deploying this app is pretty manual at this point. If I had to do it more than once I'd likely want to set up a CI/CD pipeline via a service like Jenkins or CircleCI.
