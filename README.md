@@ -6,7 +6,7 @@ In order to run this application locally you'll need to have a PostgreSQL instan
 
 ## Local Development
 ### Configuration
-Some base configuration is configured, this can be changed if your local environment requires it
+Some base configuration is configured, this can be changed if your local environment requires it. *Base file is configured to run in Docker.*
 ```javascript
 {
   "application": {

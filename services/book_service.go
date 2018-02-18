@@ -65,6 +65,11 @@ func (bookService *BookService) CreateBook(w http.ResponseWriter, r *http.Reques
 	}
 	defer r.Body.Close()
 
+	if err := b.Validate(true); err != nil {
+		RespondWithError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
 	if err := b.CreateBook(bookService.DB); err != nil {
 		RespondWithError(w, http.StatusInternalServerError, err.Error())
 		return
@@ -88,7 +93,16 @@ func (bookService *BookService) UpdateBook(w http.ResponseWriter, r *http.Reques
 		return
 	}
 	defer r.Body.Close()
-	b.ID = id
+
+	if b.ID != id {
+		RespondWithError(w, http.StatusBadRequest, "Book ID in body does not match ID in URI")
+		return
+	}
+
+	if err := b.Validate(false); err != nil {
+		RespondWithError(w, http.StatusBadRequest, err.Error())
+		return
+	}
 
 	if err := b.UpdateBook(bookService.DB); err != nil {
 		RespondWithError(w, http.StatusInternalServerError, err.Error())

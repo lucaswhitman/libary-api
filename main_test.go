@@ -67,21 +67,6 @@ func checkResponseCode(t *testing.T, expected, actual int) {
 	}
 }
 
-func TestGetNonExistentBook(t *testing.T) {
-	clearTables()
-
-	req, _ := http.NewRequest("GET", "/books/11", nil)
-	response := executeRequest(req)
-
-	checkResponseCode(t, http.StatusNotFound, response.Code)
-
-	var m map[string]string
-	json.Unmarshal(response.Body.Bytes(), &m)
-	if m["error"] != "Book not found" {
-		t.Errorf("Expected the 'error' key of the response to be set to 'Book not found'. Got '%s'", m["error"])
-	}
-}
-
 func TestCreateBook(t *testing.T) {
 	clearTables()
 
@@ -104,40 +89,42 @@ func TestCreateBook(t *testing.T) {
 	if m["title"] != "Hitchhikers Guide to the Galaxy" {
 		t.Errorf("Expected product name to be 'Hitchhikers Guide to the Galaxy'. Got '%v'", m["name"])
 	}
-
-	//todo: more checks
-
-	// the id is compared to 1.0 because JSON unmarshaling converts numbers to
-	// floats, when the target is a map[string]interface{}
-	/*if m["id"] != 1.0 {
-		t.Errorf("Expected product ID to be '1'. Got '%v'", m["id"])
-	}
-	*/
 }
 
-func TestGetBook(t *testing.T) {
+func TestCreateBookBadRequest(t *testing.T) {
 	clearTables()
-	addBooks(1)
 
-	req, _ := http.NewRequest("GET", "/books/1", nil)
+	payload := []byte(`{
+		"author": "Douglas Adams",
+		"publisher": "Pan Books",
+		"publishDate": "1979-10-12T11:45:26.371Z",
+		"rating": 3,
+		"status": "CheckedOut"}`)
+
+	req, _ := http.NewRequest("POST", "/books", bytes.NewBuffer(payload))
 	response := executeRequest(req)
 
-	checkResponseCode(t, http.StatusOK, response.Code)
+	checkResponseCode(t, http.StatusBadRequest, response.Code)
+
+	var m map[string]string
+	json.Unmarshal(response.Body.Bytes(), &m)
+	if m["error"] != "Title cannot be empty" {
+		t.Errorf("Expected the 'error' key of the response to be set to 'Title cannot be empty'. Got '%s'", m["error"])
+	}
 }
 
-func addBooks(count int) {
-	if count < 1 {
-		count = 1
-	}
+func TestGetNonExistentBook(t *testing.T) {
+	clearTables()
 
-	for i := 0; i < count; i++ {
-		a.DB.Exec("INSERT INTO books(title, author, publisher, publish_date, rating, status) VALUES($1, $2, $3, $4, $5, $6)",
-			"Book "+strconv.Itoa(i),
-			"That One Guy",
-			"Test Publisher",
-			"2014-11-12T11:45:26.371Z",
-			1,
-			"CheckedIn")
+	req, _ := http.NewRequest("GET", "/books/11", nil)
+	response := executeRequest(req)
+
+	checkResponseCode(t, http.StatusNotFound, response.Code)
+
+	var m map[string]string
+	json.Unmarshal(response.Body.Bytes(), &m)
+	if m["error"] != "Book not found" {
+		t.Errorf("Expected the 'error' key of the response to be set to 'Book not found'. Got '%s'", m["error"])
 	}
 }
 
@@ -196,6 +183,65 @@ func TestUpdateBook(t *testing.T) {
 	}
 }
 
+func TestUpdateBookBadID(t *testing.T) {
+	clearTables()
+	addBooks(1)
+
+	req, _ := http.NewRequest("GET", "/books/1", nil)
+	response := executeRequest(req)
+	var originalBook map[string]interface{}
+	json.Unmarshal(response.Body.Bytes(), &originalBook)
+
+	payload := []byte(`{
+		"id": 20,
+		"title":"Hitchhikers Guide to the Galaxy",
+		"author": "Douglas Adams",
+		"publisher": "Pan Books",
+		"publishDate": "1979-10-12T11:45:26.371Z",
+		"rating": 3,
+		"status": "CheckedOut"}`)
+
+	req, _ = http.NewRequest("PUT", "/books/1", bytes.NewBuffer(payload))
+	response = executeRequest(req)
+
+	checkResponseCode(t, http.StatusBadRequest, response.Code)
+
+	var m map[string]string
+	json.Unmarshal(response.Body.Bytes(), &m)
+	if m["error"] != "Book ID in body does not match ID in URI" {
+		t.Errorf("Expected the 'error' key of the response to be set to 'Book ID in body does not match ID in URI'. Got '%s'", m["error"])
+	}
+}
+
+func TestUpdateBookBadRequest(t *testing.T) {
+	clearTables()
+	addBooks(1)
+
+	req, _ := http.NewRequest("GET", "/books/1", nil)
+	response := executeRequest(req)
+	var originalBook map[string]interface{}
+	json.Unmarshal(response.Body.Bytes(), &originalBook)
+
+	payload := []byte(`{
+		"id": 1,
+		"title":"Hitchhikers Guide to the Galaxy",
+		"publisher": "Pan Books",
+		"publishDate": "1979-10-12T11:45:26.371Z",
+		"rating": 3,
+		"status": "CheckedOut"}`)
+
+	req, _ = http.NewRequest("PUT", "/books/1", bytes.NewBuffer(payload))
+	response = executeRequest(req)
+
+	checkResponseCode(t, http.StatusBadRequest, response.Code)
+
+	var m map[string]string
+	json.Unmarshal(response.Body.Bytes(), &m)
+	if m["error"] != "Author cannot be empty" {
+		t.Errorf("Expected the 'error' key of the response to be set to 'Author cannot be empty'. Got '%s'", m["error"])
+	}
+}
+
 func TestDeleteBook(t *testing.T) {
 	clearTables()
 	addBooks(1)
@@ -212,4 +258,28 @@ func TestDeleteBook(t *testing.T) {
 	req, _ = http.NewRequest("GET", "/books/1", nil)
 	response = executeRequest(req)
 	checkResponseCode(t, http.StatusNotFound, response.Code)
+}
+
+func TestDeleteBookNotThere(t *testing.T) {
+	clearTables()
+
+	req, _ := http.NewRequest("DELETE", "/books/1", nil)
+	response := executeRequest(req)
+	checkResponseCode(t, http.StatusOK, response.Code)
+}
+
+func addBooks(count int) {
+	if count < 1 {
+		count = 1
+	}
+
+	for i := 0; i < count; i++ {
+		a.DB.Exec("INSERT INTO books(title, author, publisher, publish_date, rating, status) VALUES($1, $2, $3, $4, $5, $6)",
+			"Book "+strconv.Itoa(i),
+			"That One Guy",
+			"Test Publisher",
+			"2014-11-12T11:45:26.371Z",
+			1,
+			"CheckedIn")
+	}
 }
