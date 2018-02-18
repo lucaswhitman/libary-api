@@ -9,11 +9,11 @@ import (
 )
 
 type Configuration struct {
-	host         string
-	port         int
-	username     string
-	password     string
-	databaseName string
+	Host         string `json:"host"`
+	Port         int    `json:"port"`
+	Username     string `json:"username"`
+	Password     string `json:"password"`
+	DatabaseName string `json:"databaseName"`
 }
 
 func main() {
@@ -21,7 +21,7 @@ func main() {
 
 	conf := getConf("./config.json")
 
-	a.Initialize(conf.host, conf.port, conf.username, conf.password, conf.databaseName)
+	a.Initialize(conf.Host, conf.Port, conf.Username, conf.Password, conf.DatabaseName)
 
 	a.Run(":8080")
 }

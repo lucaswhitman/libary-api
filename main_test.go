@@ -19,16 +19,8 @@ var a app.App
 func TestMain(m *testing.M) {
 	a = app.App{}
 
-	//conf := getConf("./config_test.json")
-	//todo: don't hardcode
-	conf := Configuration{}
-	conf.host = "127.0.0.1"
-	conf.port = 5432
-	conf.username = "library_test"
-	conf.password = "password"
-	conf.databaseName = "library_test"
-
-	a.Initialize(conf.host, conf.port, conf.username, conf.password, conf.databaseName)
+	conf := getConf("./config_test.json")
+	a.Initialize(conf.Host, conf.Port, conf.Username, conf.Password, conf.DatabaseName)
 	ensureTablesExists()
 	code := m.Run()
 

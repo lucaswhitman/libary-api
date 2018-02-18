@@ -31,7 +31,7 @@ func (a *App) Initialize(host string, port int, user string, password string, db
 	a.Router = mux.NewRouter()
 	a.initializeRoutes()
 
-	a.bookService = services.BookService{a.DB}
+	a.bookService = services.BookService{DB: a.DB}
 
 }
 
