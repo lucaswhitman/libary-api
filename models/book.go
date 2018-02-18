@@ -1,17 +1,12 @@
 package models
 
 import (
-	"fmt"
 	"database/sql"
-	"encoding/json"
 	"errors"
-	"strings"
 	"time"
 )
 
 const PUBLISH_DATE_FORMAT = "2006-01-02"
-
-type JsonPublishDate time.Time
 
 type StatusEnum string
 
@@ -21,13 +16,13 @@ const (
 )
 
 type Book struct {
-	ID          int             `json:"id,omitempty"`
-	Title       string          `json:"title"`
-	Author      string          `json:"author"`
-	Publisher   string          `json:"publisher"`
-	PublishDate JsonPublishDate `json:"publishDate"`
-	Rating      int             `json:"rating"`
-	Status      StatusEnum      `json:"status"`
+	ID          int        `json:"id,omitempty"`
+	Title       string     `json:"title"`
+	Author      string     `json:"author"`
+	Publisher   string     `json:"publisher"`
+	PublishDate time.Time  `json:"publishDate"`
+	Rating      int        `json:"rating"`
+	Status      StatusEnum `json:"status"`
 }
 
 func (b *Book) Validate(isNew bool) error {
@@ -46,7 +41,7 @@ func (b *Book) Validate(isNew bool) error {
 	if b.Publisher == "" {
 		return errors.New("Publisher cannot be empty")
 	}
-	if time.Time(b.PublishDate).After(time.Now()) {
+	if b.PublishDate.After(time.Now()) {
 		return errors.New("Cannot add unpublished books")
 	}
 	if b.Rating < 1 {
@@ -114,19 +109,4 @@ func GetBooks(db *sql.DB, start, count int) ([]Book, error) {
 	}
 
 	return Books, nil
-}
-
-// imeplement Marshaler und Unmarshaler interface
-func (j *JsonPublishDate) UnmarshalJSON(b []byte) error {
-	s := strings.Trim(string(b), "\"")
-	t, err := time.Parse("2006-01-02", s)
-	if err != nil {
-		return err
-	}
-	*j = JsonPublishDate(t)
-	return nil
-}
-
-func (j JsonPublishDate) MarshalJSON() ([]byte, error) {
-	return json.Marshal(j)
 }

@@ -95,12 +95,12 @@ func TestGetNonExistentBook(t *testing.T) {
 
 func TestCreateBook(t *testing.T) {
 	clearTables()
-	//TODO: Fix create
+
 	payload := []byte(`{
 		"title":"Hitchhikers Guide to the Galaxy",
 		"author": "Douglas Adams",
 		"publisher": "Pan Books",
-		"publishDate": "1979-10-12",
+		"publishDate": "1979-10-12T11:45:26.371Z",
 		"rating": 3,
 		"status": "CheckedOut"}`)
 
@@ -146,7 +146,7 @@ func addBooks(count int) {
 			"Book "+strconv.Itoa(i),
 			"That One Guy",
 			"Test Publisher",
-			"2011-01-01",
+			"2014-11-12T11:45:26.371Z",
 			3,
 			"CheckedIn")
 	}
@@ -162,12 +162,13 @@ func TestUpdateBook(t *testing.T) {
 	json.Unmarshal(response.Body.Bytes(), &originalBook)
 
 	payload := []byte(`{
+		"id": 1,
 		"title":"Hitchhikers Guide to the Galaxy",
 		"author": "Douglas Adams",
 		"publisher": "Pan Books",
-		"publishDate": "10-12-1979",
+		"publishDate": "1979-10-12T11:45:26.371Z",
 		"rating": 3,
-		"status": "CheckedOut"`)
+		"status": "CheckedOut"}`)
 
 	req, _ = http.NewRequest("PUT", "/book/1", bytes.NewBuffer(payload))
 	response = executeRequest(req)

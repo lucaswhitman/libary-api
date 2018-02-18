@@ -84,7 +84,7 @@ func (bookService *BookService) UpdateBook(w http.ResponseWriter, r *http.Reques
 	var b models.Book
 	decoder := json.NewDecoder(r.Body)
 	if err := decoder.Decode(&b); err != nil {
-		RespondWithError(w, http.StatusBadRequest, "Invalid resquest payload")
+		RespondWithError(w, http.StatusBadRequest, err.Error())
 		return
 	}
 	defer r.Body.Close()
