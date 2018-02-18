@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"encoding/json"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"net/http/httptest"
@@ -13,8 +12,6 @@ import (
 
 	"github.com/lucaswhitman/library-api/app"
 )
-
-var a app.App
 
 func TestMain(m *testing.M) {
 	a = app.App{}
@@ -30,16 +27,6 @@ func TestMain(m *testing.M) {
 	clearTables()
 
 	os.Exit(code)
-}
-
-func ensureTablesExists() {
-	booksTableCreationQuery, err := ioutil.ReadFile("sql/createBooksTable.sql")
-	if err != nil {
-		log.Fatal(err)
-	}
-	if _, err := a.DB.Exec(string(booksTableCreationQuery)); err != nil {
-		log.Fatal(err)
-	}
 }
 
 func clearTables() {
