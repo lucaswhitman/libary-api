@@ -4,9 +4,11 @@ import (
 	"encoding/json"
 	"log"
 	"os"
+
+	"github.com/lucaswhitman/library-api/app"
 )
 
-type configuration struct {
+type Configuration struct {
 	host         string
 	port         int
 	username     string
@@ -15,17 +17,22 @@ type configuration struct {
 }
 
 func main() {
-	a := App{}
+	a := app.App{}
 
-	file, _ := os.Open("config.json")
-	decoder := json.NewDecoder(file)
-	conf := configuration{}
-	err := decoder.Decode(&conf)
-	if err != nil {
-		log.Fatal(err)
-	}
+	conf := getConf("./config.json")
 
 	a.Initialize(conf.host, conf.port, conf.username, conf.password, conf.databaseName)
 
 	a.Run(":8080")
+}
+
+func getConf(fileName string) Configuration {
+	file, _ := os.Open(fileName)
+	decoder := json.NewDecoder(file)
+	conf := Configuration{}
+	err := decoder.Decode(&conf)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return conf
 }

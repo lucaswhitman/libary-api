@@ -1,6 +1,7 @@
 #notes
 * tests could probably be refactored a bit to reduce the bulk of the copy-pasta code
 * todo: remove config into configurator class
+* Author should be first class citzen
 
 #dependencies
 go get github.com/stretchr/testify/assert

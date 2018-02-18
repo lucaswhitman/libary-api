@@ -1,8 +1,8 @@
 CREATE TABLE IF NOT EXISTS books
 (
-	id BIGINT,
+	id SERIAL,
 	title TEXT NOT NULL,
-	author_id BIGINT REFERENCES authors(id),
+	author TEXT NOT NULL,
 	publisher TEXT NOT NULL,
 	publish_date DATE,
 	rating INT NOT NULL,

@@ -1,7 +1,7 @@
 {
   "host": "127.0.0.1",
   "port": 5432,
-  "username": "libary_test",
+  "username": "library_test",
   "password": "password",
-  "databaseName": "libary_test"
+  "databaseName": "library_test"
 }

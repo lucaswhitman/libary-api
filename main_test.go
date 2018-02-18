@@ -1,4 +1,4 @@
-package main_test
+package main
 
 import (
 	"bytes"
@@ -11,34 +11,25 @@ import (
 	"strconv"
 	"testing"
 
-	"."
+	"github.com/lucaswhitman/library-api/app"
 )
 
-var a main.App
-
-type configuration struct {
-	Host         string `json:"host"`
-	Port         int    `json:"port"`
-	Username     string `json:"username"`
-	Password     string `json:"password"`
-	DatabaseName string `json:"databaseName"`
-}
+var a app.App
 
 func TestMain(m *testing.M) {
-	a = main.App{}
+	a = app.App{}
 
-	file, _ := os.Open("config_test.json")
-	decoder := json.NewDecoder(file)
-	conf := configuration{}
-	err := decoder.Decode(&conf)
-	if err != nil {
-		log.Fatal(err)
-	}
+	//conf := getConf("./config_test.json")
+	//todo: don't hardcode
+	conf := Configuration{}
+	conf.host = "127.0.0.1"
+	conf.port = 5432
+	conf.username = "library_test"
+	conf.password = "password"
+	conf.databaseName = "library_test"
 
-	a.Initialize(conf.Host, conf.Port, conf.Username, conf.Password, conf.DatabaseName)
-
+	a.Initialize(conf.host, conf.port, conf.username, conf.password, conf.databaseName)
 	ensureTablesExists()
-
 	code := m.Run()
 
 	clearTables()
@@ -47,34 +38,24 @@ func TestMain(m *testing.M) {
 }
 
 func ensureTablesExists() {
-	booksTableCreationQuery, err := ioutil.ReadFile("sql/createBooksTable.sql") // just pass the file name
+	booksTableCreationQuery, err := ioutil.ReadFile("sql/createBooksTable.sql")
 	if err != nil {
 		log.Fatal(err)
 	}
 	if _, err := a.DB.Exec(string(booksTableCreationQuery)); err != nil {
 		log.Fatal(err)
 	}
-
-	authorsTableCreationQuery, err := ioutil.ReadFile("sql/createAuthorsTable.sql") // just pass the file name
-	if err != nil {
-		log.Fatal(err)
-	}
-	if _, err := a.DB.Exec(string(authorsTableCreationQuery)); err != nil {
-		log.Fatal(err)
-	}
 }
 
 func clearTables() {
 	a.DB.Exec("DELETE FROM books")
-	a.DB.Exec("DELETE FROM authors")
 	a.DB.Exec("ALTER SEQUENCE books_id_seq RESTART WITH 1")
-	a.DB.Exec("ALTER SEQUENCE authors_id_seq RESTART WITH 1")
 }
 
 func TestEmptyTable(t *testing.T) {
 	clearTables()
 
-	req, _ := http.NewRequest("GET", "/products", nil)
+	req, _ := http.NewRequest("GET", "/book", nil)
 	response := executeRequest(req)
 
 	checkResponseCode(t, http.StatusOK, response.Code)
@@ -100,31 +81,28 @@ func checkResponseCode(t *testing.T, expected, actual int) {
 func TestGetNonExistentBook(t *testing.T) {
 	clearTables()
 
-	req, _ := http.NewRequest("GET", "/books/11", nil)
+	req, _ := http.NewRequest("GET", "/book/11", nil)
 	response := executeRequest(req)
 
 	checkResponseCode(t, http.StatusNotFound, response.Code)
 
 	var m map[string]string
 	json.Unmarshal(response.Body.Bytes(), &m)
-	if m["error"] != "Product not found" {
+	if m["error"] != "Book not found" {
 		t.Errorf("Expected the 'error' key of the response to be set to 'Book not found'. Got '%s'", m["error"])
 	}
 }
 
 func TestCreateBook(t *testing.T) {
 	clearTables()
-
+	//TODO: Fix create
 	payload := []byte(`{
 		"title":"Hitchhikers Guide to the Galaxy",
-		"author":{
-			"firstName": "Douglas", 
-			"lastName":"Adams"}
-		},
+		"author": "Douglas Adams",
 		"publisher": "Pan Books",
-		"publishDate": "10-12-1979",
+		"publishDate": "1979-10-12",
 		"rating": 3,
-		"status": "CheckedOut"`)
+		"status": "CheckedOut"}`)
 
 	req, _ := http.NewRequest("POST", "/book", bytes.NewBuffer(payload))
 	response := executeRequest(req)
@@ -163,13 +141,10 @@ func addBooks(count int) {
 		count = 1
 	}
 
-	//insert one author
-	a.DB.Exec("INSERT INTO authors(firstname, lastname) VALUES($1, $2)")
-
 	for i := 0; i < count; i++ {
-		a.DB.Exec("INSERT INTO books(title, author_id, publisher, publish_date, rating, status) VALUES($1, $2, $3, $4, $5, $6)",
+		a.DB.Exec("INSERT INTO books(title, author, publisher, publish_date, rating, status) VALUES($1, $2, $3, $4, $5, $6)",
 			"Book "+strconv.Itoa(i),
-			1,
+			"That One Guy",
 			"Test Publisher",
 			"2011-01-01",
 			3,
@@ -188,10 +163,7 @@ func TestUpdateBook(t *testing.T) {
 
 	payload := []byte(`{
 		"title":"Hitchhikers Guide to the Galaxy",
-		"author":{
-			"firstName": "Douglas", 
-			"lastName":"Adams"}
-		},
+		"author": "Douglas Adams",
 		"publisher": "Pan Books",
 		"publishDate": "10-12-1979",
 		"rating": 3,
