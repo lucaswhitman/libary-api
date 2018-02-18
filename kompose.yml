@@ -1,0 +1,108 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml -o kompose.yml
+      kompose.version: 1.9.0 ()
+    creationTimestamp: null
+    labels:
+      io.kompose.service: db
+    name: db
+  spec:
+    clusterIP: None
+    ports:
+    - name: headless
+      port: 55555
+      targetPort: 0
+    selector:
+      io.kompose.service: db
+  status:
+    loadBalancer: {}
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml -o kompose.yml
+      kompose.version: 1.9.0 ()
+    creationTimestamp: null
+    labels:
+      io.kompose.service: app
+    name: app
+  spec:
+    replicas: 1
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          io.kompose.service: app
+      spec:
+        containers:
+        - args:
+          - ./library-api
+          image: library-api-amd64:v1
+          name: app
+          ports:
+          - containerPort: 80
+          resources: {}
+          volumeMounts:
+          - mountPath: /go/src/github.com/lucaswhitman/library-api/
+            name: app-claim0
+        restartPolicy: Always
+        volumes:
+        - name: app-claim0
+          persistentVolumeClaim:
+            claimName: app-claim0
+  status: {}
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    creationTimestamp: null
+    labels:
+      io.kompose.service: app-claim0
+    name: app-claim0
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 100Mi
+  status: {}
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    annotations:
+      kompose.cmd: kompose convert -f docker-compose.yml -o kompose.yml
+      kompose.version: 1.9.0 ()
+    creationTimestamp: null
+    labels:
+      io.kompose.service: db
+    name: db
+  spec:
+    replicas: 1
+    strategy: {}
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          io.kompose.service: db
+      spec:
+        containers:
+        - env:
+          - name: POSTGRES_DB
+            value: library
+          - name: POSTGRES_PASSWORD
+            value: s3cr3tp4ssw0rd
+          - name: POSTGRES_USER
+            value: library
+          image: postgres
+          name: db
+          resources: {}
+        restartPolicy: Always
+  status: {}
+kind: List
+metadata: {}
+

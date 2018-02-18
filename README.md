@@ -53,6 +53,35 @@ Requires that Docker is installed on the local machine
 make local
 ```
 
+#### Testing with Minikube
+Setting up Minikube (assumes installed)
+```bash
+eval $(minikube docker-env)
+minikube start
+```
+Build binary for Linux
+```bash
+make build-linux
+```
+Create kubernetes cluster from .yml file and expose via a load balancer
+```bash
+kubectl create -f kompose.yml
+kubectl expose deployment app --type=LoadBalancer
+```
+The --type=LoadBalancer flag indicates that you want to expose your Service outside of the cluster. On cloud providers that support load balancers, an external IP address would be provisioned to access the Service. On Minikube, the LoadBalancer type makes the Service accessible through the minikube service command.
+```bash
+minikube service app
+```
+This will open a browser, you can then use this address and port to access the api:
+```
+<ip:port>/books
+```
+
+cleanup (probably don't want to do this in production...):
+```bash
+kubectl delete pods --all && kubectl delete service --all && kubectl delete deployments --all && kubectl delete persistentvolumeclaims --all
+```
+
 ## Sample usage
 This app can be tested manually via PostMan or cURL, here are some information to get you started:
 

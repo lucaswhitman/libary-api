@@ -1,5 +1,6 @@
-FROM golang:1.8
-
+FROM golang:1.9.4-alpine3.6
+RUN apk add --update go git
+RUN go get github.com/gorilla/mux github.com/lib/pq
 RUN mkdir -p /go/src/app
 WORKDIR /go/src/app
 
@@ -10,5 +11,3 @@ EXPOSE 8080
 
 COPY ./wait-for-it.sh /bin/wait-for-it.sh
 RUN chmod +x /bin/wait-for-it.sh
-CMD ["/bin/wait-for-it.sh", APP_ENV]
-RUN go get github.com/gorilla/mux github.com/lib/pq
