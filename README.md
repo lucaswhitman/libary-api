@@ -44,5 +44,118 @@ go build
 ### Running Tests
 To run tests:
 ```bash
- go test ./...
+go test ./...
 ```
+
+## Sample usage
+This app can be tested manually via PostMan or cURL, here are some information to get you started:
+
+### The Book Model
+```javascript
+{
+  "id": 1,
+  "title":"Hitchhikers Guide to the Galaxy",
+  "author": "Douglas Adams",
+  "publisher": "Pan Books",
+  "publishDate": "1979-10-12T11:45:26.371Z",
+  "rating": 3,
+  "status": "CheckedOut"
+}
+```
+
+### Create a New Note
+POST /books
+BODY a book
+#### Example
+```bash
+curl -i -H "Content-Type: application/json" -X POST -d '{
+  "title":"Hitchhikers Guide to the Galaxy",
+  "author": "Douglas Adams",
+  "publisher": "Pan Books",
+  "publishDate": "1979-10-12T11:45:26.371Z",
+  "rating": 3,
+  "status": "CheckedOut"
+}' http://localhost:8000/books
+```
+#### Returns:
+A saved book...
+```javascript
+{
+  "id":1,
+  "title":"Hitchhikers Guide to the Galaxy",
+  "author":"Douglas Adams",
+  "publisher":"Pan Books",
+  "publishDate":"1979-10-12T11:45:26.371Z",
+  "rating":3,
+  "status":"CheckedOut"
+}
+```
+
+### Get an existing book
+You can get a book using an API call:
+GET /books/{id}
+#### Example:
+```bash
+curl -i -H "Content-Type: application/json" -X GET http://localhost:8000/books/1
+```
+#### Returns:
+The requested book
+```javascript
+{
+  "id":1,
+  "title":"Hitchhikers Guide to the Galaxy",
+  "author":"Douglas Adams",
+  "publisher":"Pan Books",
+  "publishDate":"1979-10-12T11:45:26.371Z",
+  "rating":3,
+  "status":"CheckedOut"
+}
+```
+
+### Get all books
+I can get all books using an API call:
+GET /books
+#### Example:
+```bash
+curl -i -H "Content-Type: application/json" -X GET http://localhost:8000/books
+```
+Returns:
+A list of books
+```javascript
+[
+  {
+    "id":1,
+    "title":"Hitchhikers Guide to the Galaxy",
+    "author":"Douglas Adams",
+    "publisher":"Pan Books",
+    "publishDate":"1979-10-12T00:00:00Z",
+    "rating":3,"status":"CheckedOut"
+  },{
+    "id":2,
+    "title":"The Great Book of Amber",
+    "author":"Roger Zelazny",
+    "publisher":"Harper Voyager",
+    "publishDate":"1979-10-12T00:00:00Z",
+    "rating":3,"status":"CheckedOut"
+  }
+]
+```
+
+### Delete an existing book
+You can delete a book using an API call:
+DELETE /books/{id}
+#### Example:
+```bash
+curl -i -H "Content-Type: application/json" -X DELETE http://localhost:8000/books/1
+```
+#### Returns:
+The status of the request
+```javascript
+{
+  "result":"success"
+}
+```
+
+
+
+
