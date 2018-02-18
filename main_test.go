@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"net/http/httptest"
@@ -21,7 +22,13 @@ func TestMain(m *testing.M) {
 		log.Fatal(err)
 	}
 	a.Initialize(conf.Database.Host, conf.Database.Port, conf.Database.Username, conf.Database.Password, conf.Database.DatabaseName)
-	ensureTablesExists()
+	booksTableCreationQuery, err := ioutil.ReadFile("sql/createBooksTable.sql")
+	if err != nil {
+		log.Fatal(err)
+	}
+	if _, err := a.DB.Exec(string(booksTableCreationQuery)); err != nil {
+		log.Fatal(err)
+	}
 	code := m.Run()
 
 	clearTables()
