@@ -50,7 +50,7 @@ func clearTables() {
 func TestEmptyTable(t *testing.T) {
 	clearTables()
 
-	req, _ := http.NewRequest("GET", "/book", nil)
+	req, _ := http.NewRequest("GET", "/books", nil)
 	response := executeRequest(req)
 
 	checkResponseCode(t, http.StatusOK, response.Code)
@@ -76,7 +76,7 @@ func checkResponseCode(t *testing.T, expected, actual int) {
 func TestGetNonExistentBook(t *testing.T) {
 	clearTables()
 
-	req, _ := http.NewRequest("GET", "/book/11", nil)
+	req, _ := http.NewRequest("GET", "/books/11", nil)
 	response := executeRequest(req)
 
 	checkResponseCode(t, http.StatusNotFound, response.Code)
@@ -99,7 +99,7 @@ func TestCreateBook(t *testing.T) {
 		"rating": 3,
 		"status": "CheckedOut"}`)
 
-	req, _ := http.NewRequest("POST", "/book", bytes.NewBuffer(payload))
+	req, _ := http.NewRequest("POST", "/books", bytes.NewBuffer(payload))
 	response := executeRequest(req)
 
 	checkResponseCode(t, http.StatusCreated, response.Code)
@@ -125,7 +125,7 @@ func TestGetBook(t *testing.T) {
 	clearTables()
 	addBooks(1)
 
-	req, _ := http.NewRequest("GET", "/book/1", nil)
+	req, _ := http.NewRequest("GET", "/books/1", nil)
 	response := executeRequest(req)
 
 	checkResponseCode(t, http.StatusOK, response.Code)
@@ -151,7 +151,7 @@ func TestUpdateBook(t *testing.T) {
 	clearTables()
 	addBooks(1)
 
-	req, _ := http.NewRequest("GET", "/book/1", nil)
+	req, _ := http.NewRequest("GET", "/books/1", nil)
 	response := executeRequest(req)
 	var originalBook map[string]interface{}
 	json.Unmarshal(response.Body.Bytes(), &originalBook)
@@ -165,7 +165,7 @@ func TestUpdateBook(t *testing.T) {
 		"rating": 3,
 		"status": "CheckedOut"}`)
 
-	req, _ = http.NewRequest("PUT", "/book/1", bytes.NewBuffer(payload))
+	req, _ = http.NewRequest("PUT", "/books/1", bytes.NewBuffer(payload))
 	response = executeRequest(req)
 
 	checkResponseCode(t, http.StatusOK, response.Code)
@@ -206,16 +206,16 @@ func TestDeleteBook(t *testing.T) {
 	clearTables()
 	addBooks(1)
 
-	req, _ := http.NewRequest("GET", "/book/1", nil)
+	req, _ := http.NewRequest("GET", "/books/1", nil)
 	response := executeRequest(req)
 	checkResponseCode(t, http.StatusOK, response.Code)
 
-	req, _ = http.NewRequest("DELETE", "/book/1", nil)
+	req, _ = http.NewRequest("DELETE", "/books/1", nil)
 	response = executeRequest(req)
 
 	checkResponseCode(t, http.StatusOK, response.Code)
 
-	req, _ = http.NewRequest("GET", "/book/1", nil)
+	req, _ = http.NewRequest("GET", "/books/1", nil)
 	response = executeRequest(req)
 	checkResponseCode(t, http.StatusNotFound, response.Code)
 }

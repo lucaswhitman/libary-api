@@ -39,9 +39,9 @@ func (a *App) Run(port int) {
 }
 
 func (a *App) initializeRoutes() {
-	a.Router.HandleFunc("/book", a.bookService.GetBooks).Methods("GET")
-	a.Router.HandleFunc("/book", a.bookService.CreateBook).Methods("POST")
-	a.Router.HandleFunc("/book/{id:[0-9]+}", a.bookService.GetBook).Methods("GET")
-	a.Router.HandleFunc("/book/{id:[0-9]+}", a.bookService.UpdateBook).Methods("PUT")
-	a.Router.HandleFunc("/book/{id:[0-9]+}", a.bookService.DeleteBook).Methods("DELETE")
+	a.Router.HandleFunc("/books", a.bookService.GetBooks).Methods("GET")
+	a.Router.HandleFunc("/books", a.bookService.CreateBook).Methods("POST")
+	a.Router.HandleFunc("/books/{id:[0-9]+}", a.bookService.GetBook).Methods("GET")
+	a.Router.HandleFunc("/books/{id:[0-9]+}", a.bookService.UpdateBook).Methods("PUT")
+	a.Router.HandleFunc("/books/{id:[0-9]+}", a.bookService.DeleteBook).Methods("DELETE")
 }
