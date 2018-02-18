@@ -1,5 +1,5 @@
 # Library-API
-This is a sample API built with the Go programming language. It is built on top of PostgreSQL and GMux
+This is a sample API built with the Go programming language. It is built on top of PostgreSQL and GMux. It is configured for Docker and Kubernetes.
 
 ## Requirements
 In order to run this application locally you'll need to have a PostgreSQL instance, and Go installed. 
@@ -10,7 +10,7 @@ Some base configuration is configured, this can be changed if your local environ
 ```javascript
 {
   "application": {
-    "port": 8000
+    "port": 80
   },
   "database": {
     "host": "127.0.0.1",
@@ -81,7 +81,7 @@ curl -i -H "Content-Type: application/json" -X POST -d '{
   "publishDate": "1979-10-12T11:45:26.371Z",
   "rating": 3,
   "status": "CheckedOut"
-}' http://localhost:8000/books
+}' http://localhost:80/books
 ```
 #### Returns:
 A saved book...
@@ -102,7 +102,7 @@ You can get a book using an API call:
 `GET /books/{id}`
 #### Example:
 ```bash
-curl -i -H "Content-Type: application/json" -X GET http://localhost:8000/books/1
+curl -i -H "Content-Type: application/json" -X GET http://localhost:80/books/1
 ```
 #### Returns:
 The requested book
@@ -123,7 +123,7 @@ I can get all books using an API call:
 `GET /books`
 #### Example:
 ```bash
-curl -i -H "Content-Type: application/json" -X GET http://localhost:8000/books
+curl -i -H "Content-Type: application/json" -X GET http://localhost:80/books
 ```
 Returns:
 A list of books
@@ -152,7 +152,7 @@ You can delete a book using an API call:
 `DELETE /books/{id}`
 #### Example:
 ```bash
-curl -i -H "Content-Type: application/json" -X DELETE http://localhost:8000/books/1
+curl -i -H "Content-Type: application/json" -X DELETE http://localhost:80/books/1
 ```
 #### Returns:
 The status of the request

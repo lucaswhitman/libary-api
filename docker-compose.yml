@@ -8,12 +8,13 @@ services:
       POSTGRES_PASSWORD: s3cr3tp4ssw0rd
   app:
     build: .
+    image: golang:1.6.1-alpine
     command: ["/bin/wait-for-it.sh", "db:5432", "--", "go", "run", "main.go"]
     volumes:
       - .:/go/src/github.com/lucaswhitman/library-api/
     ports:
-      - "8000:8000"
+      - "80:80"
     links:
       - db
     expose:
-      - "8000"
+      - "80"
