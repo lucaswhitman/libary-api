@@ -47,13 +47,13 @@ To run tests:
 make test
 ```
 
-### Using Docker locally
+## Using Docker locally
 Requires that Docker is installed on the local machine
 ```bash
 make local
 ```
 
-#### Testing with Minikube
+## Testing deployment with Minikube
 Setting up Minikube (assumes installed)
 ```bash
 eval $(minikube docker-env)
